@@ -14,12 +14,12 @@ registerCourse(
       "lectures": [
         {
           "title": "شرح السكشن",
-          "url": "",
+          "url": "https://drive.google.com/file/d/1OSwGGlRP3_kS245JuDZMrsVT97c-jP5b/view?usp=sharing",
           "kind": "PDF"
         },
         {
           "title": "الملخص (ورقة واحدة)",
-          "url": "",
+          "url": "https://drive.google.com/file/d/1UTlaBLoMSRiJ3KyISIsrLqDknBJuIY-8/view?usp=sharing",
           "kind": "PDF"
         }
       ],
