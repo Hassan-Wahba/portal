@@ -119,6 +119,9 @@ main{padding:22px 0 60px}
   background:var(--paper);border-radius:9px;text-decoration:none;transition:.16s;
 }
 .lec:hover{background:#EDF3F1}
+.lec.off{background:transparent;border:1px dashed var(--line);color:#9EAAA7}
+.lec.off .t{font-weight:400}
+.lec.off .k{color:#B0BAB7;font-size:.7rem}
 .lec .t{flex:1;font-weight:500;font-size:.92rem}
 .lec .k{font-size:.72rem;color:var(--muted);flex:none}
 .lec .arrow{color:var(--gold);flex:none;font-size:.9rem}
@@ -217,7 +220,13 @@ main{padding:22px 0 60px}
 }
 .empty .big{font-family:'Tajawal',sans-serif;font-weight:700;color:var(--pine);font-size:1.02rem;margin-bottom:5px}
 .empty p{font-size:.88rem}
-footer{border-top:1px solid var(--line);padding:22px 0;text-align:center;color:var(--muted);font-size:.78rem}
+footer{border-top:1px solid var(--line);padding:30px 0 34px;text-align:center}
+footer .rule{width:34px;height:2.5px;background:var(--gold);border-radius:2px;margin:0 auto 13px}
+footer .nm{
+  font-family:'Tajawal','Noto Kufi Arabic',sans-serif;font-weight:700;
+  font-size:1.02rem;color:var(--pine);letter-spacing:.3px;
+}
+footer .rl{font-size:.79rem;color:var(--muted);margin-top:3px}
 
 @media(max-width:600px){
   body{font-size:14.5px}
@@ -255,7 +264,11 @@ footer{border-top:1px solid var(--line);padding:22px 0;text-align:center;color:v
 
 <main><div class="wrap" id="view"></div></main>
 
-<footer><div class="wrap"><span dir="ltr">Hassan Mohamed Hosny</span></div></footer>
+<footer><div class="wrap">
+  <div class="rule"></div>
+  <div class="nm" dir="ltr">Hassan Mohamed Hosny</div>
+  <div class="rl">معيد بأكاديمية الشروق</div>
+</div></footer>
 
 <script>
 /* ═══ data registry ═══ */
@@ -361,16 +374,22 @@ window.registerCourse = function(c){ window.COURSES.push(c); };
             '<h2>'+esc(w.title||"")+'</h2>'+
             (w.summary?'<p>'+esc(w.summary)+'</p>':'')+'</div>';
 
-    /* 1 — section files (only slots that carry a link) */
-    var live = (w.lectures||[]).filter(filled);
-    if(live.length){
-      var L = live.map(function(l){
-        return '<a class="lec" href="'+esc(l.url)+'" target="_blank" rel="noopener">'+
+    /* 1 — section: both named slots always render; empty ones read as pending */
+    var slots = w.lectures || [];
+    if(slots.length){
+      var nfill = slots.filter(filled).length;
+      var L = slots.map(function(l){
+        if(filled(l)){
+          return '<a class="lec" href="'+esc(l.url)+'" target="_blank" rel="noopener">'+
+            '<span class="t">'+esc(l.title||"ملف")+'</span>'+
+            (l.kind?'<span class="k">'+esc(l.kind)+'</span>':'')+
+            '<span class="arrow">←</span></a>';
+        }
+        return '<div class="lec off">'+
           '<span class="t">'+esc(l.title||"ملف")+'</span>'+
-          (l.kind?'<span class="k">'+esc(l.kind)+'</span>':'')+
-          '<span class="arrow">←</span></a>';
+          '<span class="k">لسه ما اترفعش</span></div>';
       }).join("");
-      h += panel("١","السكشن", ar(live.length), L, true);
+      h += panel("١","السكشن", ar(nfill)+" من "+ar(slots.length), L, true);
     }
 
     /* problems */
