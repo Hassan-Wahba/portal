@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>بورتال مقررات المحاسبة</title>
+<title>المقررات الدراسية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
@@ -102,9 +102,9 @@ main{padding:22px 0 60px}
 }
 .phead:hover{background:#FAFBFA}
 .pico{
-  width:30px;height:30px;border-radius:8px;background:#EDF3F1;color:var(--pine);
+  width:29px;height:29px;border-radius:50%;background:var(--pine);color:#fff;
   display:flex;align-items:center;justify-content:center;flex:none;
-  font-family:'Tajawal',sans-serif;font-size:.9rem;font-weight:700;
+  font-family:'Tajawal',sans-serif;font-size:.83rem;font-weight:700;
 }
 .ptitle{font-family:'Tajawal',sans-serif;font-weight:700;font-size:.98rem;color:var(--pine);flex:1}
 .pcount{font-size:.76rem;color:var(--muted);background:var(--paper);padding:2px 9px;border-radius:10px;flex:none}
@@ -235,8 +235,8 @@ footer{border-top:1px solid var(--line);padding:22px 0;text-align:center;color:v
   <div class="wrap">
     <div class="brandline"><span class="mark"></span>
       <div>
-        <h1>بورتال مقررات المحاسبة</h1>
-        <div class="sub" id="brandsub">أكاديمية الشروق · الفصل الدراسي الأول</div>
+        <h1>المقررات الدراسية</h1>
+        <div class="sub" id="brandsub">الفصل الدراسي الأول <span dir="ltr">2026/2027</span></div>
       </div>
     </div>
   </div>
@@ -248,7 +248,6 @@ footer{border-top:1px solid var(--line);padding:22px 0;text-align:center;color:v
   <div class="wrap">
     <div class="rail-head">
       <span class="lbl">أسابيع الفصل</span>
-      <span class="cnt" id="railcnt"></span>
     </div>
     <div class="rail" id="rail"></div>
   </div>
@@ -256,7 +255,7 @@ footer{border-top:1px solid var(--line);padding:22px 0;text-align:center;color:v
 
 <main><div class="wrap" id="view"></div></main>
 
-<footer><div class="wrap">حسن وهبة · معيد بأكاديمية الشروق</div></footer>
+<footer><div class="wrap"><span dir="ltr">Hassan Mohamed Hosny</span></div></footer>
 
 <script>
 /* ═══ data registry ═══ */
@@ -282,11 +281,10 @@ window.registerCourse = function(c){ window.COURSES.push(c); };
       return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];
     });
   }
-  function has(w){
-    if(!w) return false;
-    return (w.lectures&&w.lectures.length)||(w.problems&&w.problems.length)||
-           (w.quiz&&w.quiz.length)||(w.cards&&w.cards.length);
-  }
+  /* a week reaches students only when published — content alone is not enough */
+  function has(w){ return !!(w && w.published === true); }
+  /* a lecture slot shows only once it actually holds a link */
+  function filled(l){ return l && l.url && String(l.url).trim() !== ""; }
   /* optional progress memory — never load-bearing */
   var mem = {};
   function save(k,v){ try{ localStorage.setItem("portal:"+k, v); }catch(e){ mem[k]=v; } }
@@ -322,10 +320,8 @@ window.registerCourse = function(c){ window.COURSES.push(c); };
       else b.disabled = true;
       el.appendChild(b);
     });
-    document.getElementById("railcnt").textContent =
-      ws.length ? ar(n) + " من " + ar(ws.length) + " متاحة" : "";
-    document.getElementById("brandsub").textContent =
-      (c.institution || "أكاديمية الشروق") + " · " + (c.term || "الفصل الدراسي الأول");
+    document.getElementById("brandsub").innerHTML =
+      esc(c.term || "الفصل الدراسي الأول") + ' <span dir="ltr">' + esc(c.year || "2026/2027") + '</span>';
   }
 
   function pickFirst(){
@@ -356,8 +352,8 @@ window.registerCourse = function(c){ window.COURSES.push(c); };
     var v = document.getElementById("view");
 
     if(!w || !has(w)){
-      v.innerHTML = '<div class="empty"><div class="big">لسه مفيش محتوى منشور</div>'+
-        '<p>المحاضرات والتدريبات هتظهر هنا أول بأول خلال الفصل.</p></div>';
+      v.innerHTML = '<div class="empty"><div class="big">الأسبوع ده لسه ما اتفتحش</div>'+
+        '<p>محتوى كل أسبوع بيظهر هنا في وقته خلال الفصل.</p></div>';
       return;
     }
 
@@ -365,15 +361,16 @@ window.registerCourse = function(c){ window.COURSES.push(c); };
             '<h2>'+esc(w.title||"")+'</h2>'+
             (w.summary?'<p>'+esc(w.summary)+'</p>':'')+'</div>';
 
-    /* lectures */
-    if(w.lectures && w.lectures.length){
-      var L = w.lectures.map(function(l){
-        return '<a class="lec" href="'+esc(l.url||"#")+'" target="_blank" rel="noopener">'+
-          '<span class="t">'+esc(l.title||"ملف المحاضرة")+'</span>'+
+    /* 1 — section files (only slots that carry a link) */
+    var live = (w.lectures||[]).filter(filled);
+    if(live.length){
+      var L = live.map(function(l){
+        return '<a class="lec" href="'+esc(l.url)+'" target="_blank" rel="noopener">'+
+          '<span class="t">'+esc(l.title||"ملف")+'</span>'+
           (l.kind?'<span class="k">'+esc(l.kind)+'</span>':'')+
           '<span class="arrow">←</span></a>';
       }).join("");
-      h += panel("م","المحاضرة", ar(w.lectures.length), L, true);
+      h += panel("١","السكشن", ar(live.length), L, true);
     }
 
     /* problems */
@@ -386,19 +383,19 @@ window.registerCourse = function(c){ window.COURSES.push(c); };
             's.classList.toggle(\'show\');this.textContent=s.classList.contains(\'show\')?\'إخفاء الحل\':\'عرض الحل\'">عرض الحل</button>'+
             '<div class="sol" id="'+id+'">'+esc(p.solution)+'</div>':'')+'</div>';
       }).join("");
-      h += panel("س","مسائل وتدريبات", ar(w.problems.length), P, false);
+      h += panel("٢","مسائل وتدريبات", ar(w.problems.length), P, false);
     }
 
     /* quiz */
     if(w.quiz && w.quiz.length){
-      h += panel("ك","اختبار قصير", ar(w.quiz.length)+" أسئلة",
+      h += panel("٣","اختبار قصير", ar(w.quiz.length)+" أسئلة",
         '<div id="qzbox"><div class="qz-start"><p>صحّح نفسك في دقيقتين وشوف إجابة كل سؤال.</p>'+
         '<button class="btn" onclick="PORTAL.quiz(0,0)">ابدأ الاختبار</button></div></div>', false);
     }
 
     /* flashcards */
     if(w.cards && w.cards.length){
-      h += panel("ص","مصطلحات", ar(w.cards.length),'<div id="fcbox"></div>', false);
+      h += panel("٤","مصطلحات", ar(w.cards.length),'<div id="fcbox"></div>', false);
     }
 
     v.innerHTML = h;

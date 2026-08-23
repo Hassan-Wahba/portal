@@ -69,6 +69,21 @@ label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);margin-b
 .rb{border:1.5px solid var(--line);border-radius:16px;padding:5px 13px;font-size:.79rem;font-weight:500;background:#fff;transition:.14s}
 .rb.on{background:var(--pine);color:#fff;border-color:var(--pine);font-weight:700}
 .empty{text-align:center;color:var(--muted);font-size:.85rem;padding:14px 0}
+.pub{display:flex;align-items:center;gap:11px;padding:13px 15px;border-radius:10px;flex-wrap:wrap}
+.pub.off{background:#F7F4EC;border:1.5px solid #E3D9BE}
+.pub.on{background:#EEF7F2;border:1.5px solid #B8DCC8}
+.pub .lab{flex:1;min-width:150px;font-size:.87rem}
+.pub .lab b{font-family:'Tajawal',sans-serif;display:block;font-size:.92rem;margin-bottom:1px}
+.pub.off .lab b{color:#7A5E14}
+.pub.on .lab b{color:#1E5C41}
+.pub .lab span{color:var(--muted);font-size:.79rem}
+.sw{display:flex;gap:0;border-radius:20px;overflow:hidden;border:1.5px solid var(--line);background:#fff;flex:none}
+.sw button{padding:7px 15px;font-size:.79rem;font-weight:700;font-family:'Tajawal',sans-serif;color:var(--muted);transition:.14s}
+.sw button.on{background:var(--pine);color:#fff}
+.fixed-slot{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.fixed-slot .nm{font-family:'Tajawal',sans-serif;font-weight:700;font-size:.85rem;color:var(--pine);flex:none;min-width:140px}
+.fixed-slot .in{flex:1;min-width:200px}
+.hint{font-size:.79rem;color:var(--muted);margin-bottom:11px}
 
 /* paste */
 .paste textarea{min-height:120px;font-size:.85rem;font-family:ui-monospace,'DejaVu Sans Mono',monospace;direction:ltr;text-align:left}
@@ -129,12 +144,27 @@ var FILES=["course-1.js","course-2.js","course-3.js","course-4.js"];
 function ar(n){return String(n).replace(/\d/g,function(d){return "٠١٢٣٤٥٦٧٨٩"[+d];});}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){
   return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];});}
-function W(){return C[ci].weeks[wi];}
+var SLOTS=["شرح السكشن","الملخص (ورقة واحدة)"];
+function W(){
+  var w=C[ci].weeks[wi];
+  if(w.published===undefined) w.published=false;
+  if(!Array.isArray(w.lectures)) w.lectures=[];
+  /* the two named slots always exist, in order, for all 14 weeks */
+  SLOTS.forEach(function(nm,k){
+    if(!w.lectures[k] || w.lectures[k].title!==nm){
+      var url=(w.lectures[k]&&w.lectures[k].url)||"";
+      w.lectures[k]={title:nm,url:url,kind:"PDF"};
+    }
+  });
+  return w;
+}
 function touch(){dirty=true;stat();}
 function stat(){
-  document.getElementById("stat").innerHTML = dirty
+  var pub=C[ci].weeks.filter(function(w){return w.published;}).length;
+  document.getElementById("stat").innerHTML = (dirty
     ? '<b>فيه تعديلات لسه ما اتحمّلتش</b> — اضغط تحميل'
-    : 'محفوظ. مفيش تعديلات معلّقة';
+    : 'محفوظ. مفيش تعديلات معلّقة')
+    + ' &nbsp;·&nbsp; <span style="opacity:.65">منشور: '+ar(pub)+' من '+ar(C[ci].weeks.length)+'</span>';
 }
 
 /* ── selectors ── */
@@ -146,8 +176,7 @@ function selectors(){
 
   var ws=document.getElementById("wsel");
   ws.innerHTML=C[ci].weeks.map(function(w,i){
-    var n=(w.lectures.length+w.problems.length+w.quiz.length+w.cards.length);
-    return '<option value="'+i+'">الأسبوع '+ar(w.n||i+1)+(n?" ✓":"")+'</option>';
+    return '<option value="'+i+'">الأسبوع '+ar(w.n||i+1)+(w.published?" — منشور":"")+'</option>';
   }).join("");
   ws.value=wi;
   ws.onchange=function(){ wi=+this.value; draw(); };
@@ -201,25 +230,45 @@ function draw(){
   var app=document.getElementById("app"); app.innerHTML="";
   var w=W();
 
+  /* publish switch */
+  var pw=document.createElement("div");
+  pw.className="pub "+(w.published?"on":"off");
+  pw.innerHTML='<div class="lab"><b>'+(w.published?"منشور للطلبة":"مخفي عن الطلبة")+'</b>'+
+    '<span>'+(w.published?"الأسبوع ظاهر ودايرته مفتوحة في البورتال."
+      :"تقدر تحضّره وترفعه، والطالب مش هيشوفه.")+'</span></div>';
+  var sw=document.createElement("div"); sw.className="sw";
+  [["مخفي",false],["منشور",true]].forEach(function(o){
+    var b=document.createElement("button");
+    b.className=(w.published===o[1]?"on":""); b.textContent=o[0];
+    b.onclick=function(){ w.published=o[1]; touch(); draw(); };
+    sw.appendChild(b);
+  });
+  pw.appendChild(sw);
+  var pb=document.createElement("section"); pb.className="block";
+  var pbd=document.createElement("div"); pbd.className="bbody"; pbd.appendChild(pw);
+  pb.appendChild(pbd); app.appendChild(pb);
+
   /* week meta */
   var meta=document.createElement("div");
   meta.appendChild(field("عنوان الأسبوع", txt(w.title,"مثال: الدورة المحاسبية وقيود التسوية",function(v){w.title=v;})));
   meta.appendChild(field("سطر تعريفي (اختياري)", txt(w.summary,"جملة تقول للطالب هيتعلم إيه في الأسبوع ده",function(v){w.summary=v;},2)));
   app.appendChild(block("بيانات الأسبوع","الأسبوع "+ar(w.n||wi+1),meta));
 
-  /* lectures */
+  /* 1 — section: two fixed slots, same in all 14 weeks */
   var L=document.createElement("div");
-  if(!w.lectures.length) L.appendChild(emptyNote("مفيش ملفات مضافة"));
+  var hint=document.createElement("div"); hint.className="hint";
+  hint.textContent="الخانة اللي تسيبها فاضية مش هتظهر للطالب.";
+  L.appendChild(hint);
   w.lectures.forEach(function(l,i){
-    var d=row("ملف "+ar(i+1),w.lectures,i);
-    d.appendChild(field("العنوان", txt(l.title,"شرح الأسبوع الثالث",function(v){l.title=v;})));
-    var two=document.createElement("div"); two.className="two";
-    two.appendChild(field("الرابط", txt(l.url,"الصق لينك جوجل درايف",function(v){l.url=v;})));
-    two.appendChild(field("النوع", txt(l.kind,"PDF",function(v){l.kind=v;})));
-    d.appendChild(two); L.appendChild(d);
+    if(i>=SLOTS.length) return;
+    var r=document.createElement("div"); r.className="fixed-slot";
+    var nm=document.createElement("span"); nm.className="nm"; nm.textContent=l.title;
+    var box=document.createElement("div"); box.className="in";
+    box.appendChild(txt(l.url,"الصق لينك الملف من جوجل درايف",function(v){l.url=v;}));
+    r.appendChild(nm); r.appendChild(box); L.appendChild(r);
   });
-  app.appendChild(block("المحاضرة والملفات", ar(w.lectures.length)+" ملف", L, "+ ملف",
-    function(){ w.lectures.push({title:"",url:"",kind:"PDF"}); }));
+  var nfill=w.lectures.filter(function(l){return l.url&&l.url.trim();}).length;
+  app.appendChild(block("١ · السكشن", ar(nfill)+" من "+ar(SLOTS.length), L));
 
   /* problems */
   var P=document.createElement("div");
@@ -230,7 +279,7 @@ function draw(){
     d.appendChild(field("الحل", txt(p.solution,"الحل اللي هيظهر لما يضغط عرض الحل",function(v){p.solution=v;},4)));
     P.appendChild(d);
   });
-  app.appendChild(block("مسائل وتدريبات", ar(w.problems.length)+" مسألة", P, "+ مسألة",
+  app.appendChild(block("٢ · مسائل وتدريبات", ar(w.problems.length)+" مسألة", P, "+ مسألة",
     function(){ w.problems.push({q:"",solution:""}); }));
 
   /* quiz */
@@ -256,7 +305,7 @@ function draw(){
     d.appendChild(field("سبب الإجابة", txt(q.why,"يظهر للطالب بعد ما يجاوب",function(v){q.why=v;},2)));
     Q.appendChild(d);
   });
-  app.appendChild(block("الاختبار القصير", ar(w.quiz.length)+" سؤال", Q, "+ سؤال",
+  app.appendChild(block("٣ · اختبار قصير", ar(w.quiz.length)+" سؤال", Q, "+ سؤال",
     function(){ w.quiz.push({q:"",options:["","","",""],answer:0,why:""}); }));
 
   /* cards */
@@ -269,7 +318,7 @@ function draw(){
     two.appendChild(field("الظهر", txt(c0.back,"التعريف",function(v){c0.back=v;},2)));
     d.appendChild(two); F.appendChild(d);
   });
-  app.appendChild(block("المصطلحات", ar(w.cards.length)+" مصطلح", F, "+ مصطلح",
+  app.appendChild(block("٤ · مصطلحات", ar(w.cards.length)+" مصطلح", F, "+ مصطلح",
     function(){ w.cards.push({front:"",back:""}); }));
 
   /* paste from Claude */
@@ -287,7 +336,7 @@ function draw(){
     var n=0, cur=W();
     if(o.title){ cur.title=o.title; n++; }
     if(o.summary){ cur.summary=o.summary; n++; }
-    ["lectures","problems","quiz","cards"].forEach(function(k){
+    ["problems","quiz","cards"].forEach(function(k){
       if(Array.isArray(o[k])){ cur[k]=cur[k].concat(o[k]); n+=o[k].length; }
     });
     if(!n){ mg.className="msg show bad"; mg.textContent="مفيش حاجة اتضافت — الملف مفيهوش الحقول المتوقعة."; return; }
