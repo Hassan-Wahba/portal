@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بورتال مقررات المحاسبة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pine:#103F39;
+  --pine-deep:#0B2A26;
+  --pine-mid:#1A5850;
+  --gold:#C8A24B;
+  --gold-lt:#E4CE93;
+  --paper:#F5F3ED;
+  --card:#FFFFFF;
+  --ink:#1B2422;
+  --muted:#61706C;
+  --line:#DFE6E3;
+  --ok:#2E7D5B;
+  --no:#B4453C;
+  --r:12px;
+  --shadow:0 1px 2px rgba(16,63,57,.05), 0 6px 20px rgba(16,63,57,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'IBM Plex Sans Arabic','Noto Naskh Arabic',system-ui,sans-serif;
+  background:var(--paper); color:var(--ink);
+  line-height:1.8; font-size:15px;
+  -webkit-text-size-adjust:100%;
+}
+h1,h2,h3,h4,.dsp{font-family:'Tajawal','Noto Kufi Arabic',system-ui,sans-serif;line-height:1.45}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ── header ── */
+header{
+  background:linear-gradient(135deg,var(--pine-deep),var(--pine) 55%,var(--pine-mid));
+  color:#fff; padding:26px 0 22px;
+}
+.wrap{max-width:940px;margin:0 auto;padding:0 18px}
+.brandline{display:flex;align-items:center;gap:11px;margin-bottom:5px}
+.brandline .mark{width:26px;height:3px;background:var(--gold);border-radius:2px;flex:none}
+header h1{font-size:1.5rem;font-weight:800;letter-spacing:-.2px}
+header .sub{font-size:.83rem;opacity:.72;font-weight:400;margin-top:3px}
+
+/* ── course tabs ── */
+.courses{
+  background:var(--pine-deep);
+  border-top:1px solid rgba(255,255,255,.07);
+  position:sticky; top:0; z-index:50;
+}
+.ctabs{display:flex;gap:4px;overflow-x:auto;padding:9px 18px;max-width:940px;margin:0 auto;scrollbar-width:none}
+.ctabs::-webkit-scrollbar{display:none}
+.ctab{
+  white-space:nowrap;padding:7px 15px;border-radius:20px;
+  font-family:'Tajawal',sans-serif;font-size:.83rem;font-weight:500;
+  color:rgba(255,255,255,.62);transition:.18s;flex:none;
+}
+.ctab:hover{color:#fff;background:rgba(255,255,255,.07)}
+.ctab.on{background:var(--gold);color:var(--pine-deep);font-weight:700}
+
+/* ── term rail ── */
+.rail-zone{background:var(--card);border-bottom:1px solid var(--line);padding:16px 0 14px}
+.rail-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px;gap:12px}
+.rail-head .lbl{font-family:'Tajawal',sans-serif;font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.4px}
+.rail-head .cnt{font-size:.72rem;color:var(--muted)}
+.rail{display:flex;align-items:center;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.wk{
+  flex:none;width:37px;height:37px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Tajawal',sans-serif;font-size:.86rem;font-weight:700;
+  border:1.5px solid var(--line);color:#B4BFBB;background:#fff;transition:.18s;
+}
+.wk.has{border-color:var(--pine);color:var(--pine);background:#fff}
+.wk.has:hover{background:#EDF3F1}
+.wk.on{background:var(--pine);border-color:var(--pine);color:#fff;box-shadow:0 0 0 3px var(--gold-lt)}
+.wk.off{cursor:default}
+
+/* ── main ── */
+main{padding:22px 0 60px}
+.wkhead{margin-bottom:18px}
+.eyebrow{
+  font-family:'Tajawal',sans-serif;font-size:.7rem;font-weight:700;
+  color:var(--gold);letter-spacing:1.2px;margin-bottom:4px;
+}
+.wkhead h2{font-size:1.3rem;font-weight:700;color:var(--pine);letter-spacing:-.2px}
+.wkhead p{color:var(--muted);font-size:.9rem;margin-top:6px;max-width:60ch}
+
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);
+}
+.phead{
+  width:100%;display:flex;align-items:center;gap:11px;padding:14px 16px;text-align:right;
+}
+.phead:hover{background:#FAFBFA}
+.pico{
+  width:30px;height:30px;border-radius:8px;background:#EDF3F1;color:var(--pine);
+  display:flex;align-items:center;justify-content:center;flex:none;
+  font-family:'Tajawal',sans-serif;font-size:.9rem;font-weight:700;
+}
+.ptitle{font-family:'Tajawal',sans-serif;font-weight:700;font-size:.98rem;color:var(--pine);flex:1}
+.pcount{font-size:.76rem;color:var(--muted);background:var(--paper);padding:2px 9px;border-radius:10px;flex:none}
+.chev{color:#A9B5B1;font-size:.75rem;transition:.2s;flex:none}
+.panel.open .chev{transform:rotate(180deg)}
+.pbody{display:none;padding:0 16px 16px;border-top:1px solid var(--line)}
+.panel.open .pbody{display:block}
+
+/* ── lectures ── */
+.lec{
+  display:flex;align-items:center;gap:11px;padding:11px 13px;margin-top:11px;
+  background:var(--paper);border-radius:9px;text-decoration:none;transition:.16s;
+}
+.lec:hover{background:#EDF3F1}
+.lec .t{flex:1;font-weight:500;font-size:.92rem}
+.lec .k{font-size:.72rem;color:var(--muted);flex:none}
+.lec .arrow{color:var(--gold);flex:none;font-size:.9rem}
+
+/* ── problems ── */
+.prob{margin-top:13px;padding-top:13px;border-top:1px dashed var(--line)}
+.prob:first-child{border-top:none;padding-top:0}
+.prob .q{display:flex;gap:9px;font-size:.93rem}
+.prob .qn{
+  font-family:'Tajawal',sans-serif;font-weight:700;color:var(--gold);flex:none;
+  min-width:22px;font-size:.86rem;padding-top:2px;
+}
+.prob .qt{flex:1;white-space:pre-wrap}
+.solbtn{
+  margin:9px 0 0 0;margin-right:31px;font-family:'Tajawal',sans-serif;font-size:.79rem;font-weight:700;
+  color:var(--pine);border:1px solid var(--line);padding:5px 13px;border-radius:16px;transition:.16s;
+}
+.solbtn:hover{background:var(--pine);color:#fff;border-color:var(--pine)}
+.sol{
+  display:none;margin:10px 0 0 0;margin-right:31px;padding:12px 14px;
+  background:#F0F6F3;border-right:3px solid var(--ok);border-radius:7px;
+  font-size:.9rem;white-space:pre-wrap;
+}
+.sol.show{display:block}
+
+/* ── quiz ── */
+.qz-start{text-align:center;padding:20px 0 6px}
+.qz-start p{color:var(--muted);font-size:.88rem;margin-bottom:13px}
+.btn{
+  font-family:'Tajawal',sans-serif;font-weight:700;font-size:.9rem;
+  background:var(--pine);color:#fff;padding:10px 26px;border-radius:22px;transition:.16s;
+}
+.btn:hover{background:var(--pine-deep)}
+.btn.ghost{background:transparent;color:var(--pine);border:1.5px solid var(--line)}
+.btn.ghost:hover{background:var(--paper)}
+.qz-bar{display:flex;align-items:center;gap:11px;margin:14px 0 13px}
+.qz-track{flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.qz-fill{height:100%;background:var(--gold);border-radius:3px;transition:width .3s}
+.qz-pos{font-family:'Tajawal',sans-serif;font-size:.76rem;color:var(--muted);font-weight:500;flex:none}
+.qz-q{font-family:'Tajawal',sans-serif;font-weight:700;font-size:1.02rem;color:var(--pine);margin-bottom:13px;line-height:1.6}
+.opt{
+  display:block;width:100%;text-align:right;padding:12px 14px;margin-bottom:8px;
+  border:1.5px solid var(--line);border-radius:9px;font-size:.92rem;transition:.14s;background:#fff;
+}
+.opt:hover:not(:disabled){border-color:var(--pine);background:#FAFBFA}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:#EEF7F2;color:#1E5C41;font-weight:500}
+.opt.wrong{border-color:var(--no);background:#FBF0EF;color:#8E332C}
+.qz-why{
+  margin-top:11px;padding:12px 14px;background:var(--paper);
+  border-right:3px solid var(--gold);border-radius:7px;font-size:.88rem;
+}
+.qz-why b{font-family:'Tajawal',sans-serif;color:var(--pine);font-size:.85rem}
+.qz-nav{margin-top:14px;display:flex;justify-content:flex-start}
+.qz-done{text-align:center;padding:22px 0 10px}
+.qz-score{font-family:'Tajawal',sans-serif;font-size:2.6rem;font-weight:800;color:var(--pine);line-height:1.2}
+.qz-of{font-size:.85rem;color:var(--muted);margin-bottom:5px}
+.qz-msg{font-size:.93rem;margin-bottom:16px}
+
+/* ── flashcards ── */
+.fc-stage{padding:14px 0 4px}
+.fc{
+  position:relative;min-height:158px;border-radius:11px;cursor:pointer;
+  perspective:1100px;margin-bottom:12px;
+}
+.fc-in{
+  position:relative;width:100%;min-height:158px;
+  transition:transform .5s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;
+}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-face{
+  position:absolute;inset:0;backface-visibility:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:22px 20px;border-radius:11px;text-align:center;min-height:158px;
+}
+.fc-front{background:var(--paper);border:1.5px solid var(--line)}
+.fc-back{background:var(--pine);color:#fff;transform:rotateY(180deg)}
+.fc-face .tx{font-family:'Tajawal',sans-serif;font-weight:700;font-size:1.06rem;line-height:1.6}
+.fc-back .tx{font-weight:500;font-size:.96rem;font-family:'IBM Plex Sans Arabic',sans-serif}
+.fc-hint{font-size:.7rem;color:var(--muted);margin-top:11px;letter-spacing:.3px}
+.fc-back .fc-hint{color:rgba(255,255,255,.5)}
+.fc-nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.fc-nav .pos{font-family:'Tajawal',sans-serif;font-size:.79rem;color:var(--muted);font-weight:500}
+.rnd{
+  border:1.5px solid var(--line);border-radius:20px;padding:7px 17px;
+  font-family:'Tajawal',sans-serif;font-size:.8rem;font-weight:700;
+  color:var(--pine);transition:.16s;flex:none;background:#fff;
+}
+.rnd:hover:not(:disabled){background:var(--pine);color:#fff;border-color:var(--pine)}
+.rnd:disabled{opacity:.32;cursor:default}
+
+/* ── empty / footer ── */
+.empty{
+  text-align:center;padding:46px 22px;background:var(--card);
+  border:1px dashed var(--line);border-radius:var(--r);color:var(--muted);
+}
+.empty .big{font-family:'Tajawal',sans-serif;font-weight:700;color:var(--pine);font-size:1.02rem;margin-bottom:5px}
+.empty p{font-size:.88rem}
+footer{border-top:1px solid var(--line);padding:22px 0;text-align:center;color:var(--muted);font-size:.78rem}
+
+@media(max-width:600px){
+  body{font-size:14.5px}
+  header{padding:20px 0 17px}
+  header h1{font-size:1.24rem}
+  .wk{width:34px;height:34px;font-size:.8rem}
+  .wkhead h2{font-size:1.14rem}
+  .sol,.solbtn{margin-right:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brandline"><span class="mark"></span>
+      <div>
+        <h1>بورتال مقررات المحاسبة</h1>
+        <div class="sub" id="brandsub">أكاديمية الشروق · الفصل الدراسي الأول</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="courses"><div class="ctabs" id="ctabs"></div></nav>
+
+<div class="rail-zone">
+  <div class="wrap">
+    <div class="rail-head">
+      <span class="lbl">أسابيع الفصل</span>
+      <span class="cnt" id="railcnt"></span>
+    </div>
+    <div class="rail" id="rail"></div>
+  </div>
+</div>
+
+<main><div class="wrap" id="view"></div></main>
+
+<footer><div class="wrap">حسن وهبة · معيد بأكاديمية الشروق</div></footer>
+
+<script>
+/* ═══ data registry ═══ */
+window.COURSES = [];
+window.registerCourse = function(c){ window.COURSES.push(c); };
+</script>
+
+<script src="data/course-1.js"></script>
+<script src="data/course-2.js"></script>
+<script src="data/course-3.js"></script>
+<script src="data/course-4.js"></script>
+
+<script>
+(function(){
+  "use strict";
+  var C = window.COURSES || [];
+  var ci = 0, wi = 0;
+
+  /* Arabic-Indic numerals */
+  function ar(n){ return String(n).replace(/\d/g, function(d){ return "٠١٢٣٤٥٦٧٨٩"[+d]; }); }
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"']/g, function(m){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];
+    });
+  }
+  function has(w){
+    if(!w) return false;
+    return (w.lectures&&w.lectures.length)||(w.problems&&w.problems.length)||
+           (w.quiz&&w.quiz.length)||(w.cards&&w.cards.length);
+  }
+  /* optional progress memory — never load-bearing */
+  var mem = {};
+  function save(k,v){ try{ localStorage.setItem("portal:"+k, v); }catch(e){ mem[k]=v; } }
+  function load(k){ try{ return localStorage.getItem("portal:"+k); }catch(e){ return mem[k]||null; } }
+
+  /* ── course tabs ── */
+  function tabs(){
+    var el = document.getElementById("ctabs");
+    el.innerHTML = "";
+    C.forEach(function(c,i){
+      var b = document.createElement("button");
+      b.className = "ctab" + (i===ci ? " on" : "");
+      b.textContent = c.short || c.title;
+      b.onclick = function(){ ci=i; pickFirst(); save("course",i); render(); };
+      el.appendChild(b);
+    });
+  }
+
+  /* ── week rail ── */
+  function rail(){
+    var c = C[ci] || {}, ws = c.weeks || [];
+    var el = document.getElementById("rail");
+    el.innerHTML = "";
+    var n = 0;
+    ws.forEach(function(w,i){
+      var live = has(w);
+      if(live) n++;
+      var b = document.createElement("button");
+      b.className = "wk " + (i===wi && live ? "on" : live ? "has" : "off");
+      b.textContent = ar(w.n != null ? w.n : i+1);
+      b.title = w.title || ("الأسبوع " + ar(w.n||i+1));
+      if(live) b.onclick = function(){ wi=i; render(); };
+      else b.disabled = true;
+      el.appendChild(b);
+    });
+    document.getElementById("railcnt").textContent =
+      ws.length ? ar(n) + " من " + ar(ws.length) + " متاحة" : "";
+    document.getElementById("brandsub").textContent =
+      (c.institution || "أكاديمية الشروق") + " · " + (c.term || "الفصل الدراسي الأول");
+  }
+
+  function pickFirst(){
+    var ws = (C[ci]||{}).weeks || [];
+    var last = parseInt(load("wk:"+ci),10);
+    if(!isNaN(last) && ws[last] && has(ws[last])){ wi = last; return; }
+    wi = 0;
+    for(var i=ws.length-1;i>=0;i--){ if(has(ws[i])){ wi=i; break; } }
+  }
+
+  /* ── panel shell ── */
+  function panel(icon,title,count,inner,openIt){
+    return '<section class="panel'+(openIt?' open':'')+'">'+
+      '<button class="phead" onclick="this.parentNode.classList.toggle(\'open\')">'+
+        '<span class="pico">'+icon+'</span>'+
+        '<span class="ptitle">'+title+'</span>'+
+        (count?'<span class="pcount">'+count+'</span>':'')+
+        '<span class="chev">▼</span>'+
+      '</button>'+
+      '<div class="pbody">'+inner+'</div></section>';
+  }
+
+  /* ── main render ── */
+  function render(){
+    tabs(); rail();
+    save("wk:"+ci, wi);
+    var c = C[ci] || {}, w = (c.weeks||[])[wi];
+    var v = document.getElementById("view");
+
+    if(!w || !has(w)){
+      v.innerHTML = '<div class="empty"><div class="big">لسه مفيش محتوى منشور</div>'+
+        '<p>المحاضرات والتدريبات هتظهر هنا أول بأول خلال الفصل.</p></div>';
+      return;
+    }
+
+    var h = '<div class="wkhead"><div class="eyebrow">الأسبوع '+ar(w.n||wi+1)+'</div>'+
+            '<h2>'+esc(w.title||"")+'</h2>'+
+            (w.summary?'<p>'+esc(w.summary)+'</p>':'')+'</div>';
+
+    /* lectures */
+    if(w.lectures && w.lectures.length){
+      var L = w.lectures.map(function(l){
+        return '<a class="lec" href="'+esc(l.url||"#")+'" target="_blank" rel="noopener">'+
+          '<span class="t">'+esc(l.title||"ملف المحاضرة")+'</span>'+
+          (l.kind?'<span class="k">'+esc(l.kind)+'</span>':'')+
+          '<span class="arrow">←</span></a>';
+      }).join("");
+      h += panel("م","المحاضرة", ar(w.lectures.length), L, true);
+    }
+
+    /* problems */
+    if(w.problems && w.problems.length){
+      var P = w.problems.map(function(p,i){
+        var id = "sol"+ci+"_"+wi+"_"+i;
+        return '<div class="prob"><div class="q"><span class="qn">'+ar(i+1)+'.</span>'+
+          '<span class="qt">'+esc(p.q||"")+'</span></div>'+
+          (p.solution?'<button class="solbtn" onclick="var s=document.getElementById(\''+id+'\');'+
+            's.classList.toggle(\'show\');this.textContent=s.classList.contains(\'show\')?\'إخفاء الحل\':\'عرض الحل\'">عرض الحل</button>'+
+            '<div class="sol" id="'+id+'">'+esc(p.solution)+'</div>':'')+'</div>';
+      }).join("");
+      h += panel("س","مسائل وتدريبات", ar(w.problems.length), P, false);
+    }
+
+    /* quiz */
+    if(w.quiz && w.quiz.length){
+      h += panel("ك","اختبار قصير", ar(w.quiz.length)+" أسئلة",
+        '<div id="qzbox"><div class="qz-start"><p>صحّح نفسك في دقيقتين وشوف إجابة كل سؤال.</p>'+
+        '<button class="btn" onclick="PORTAL.quiz(0,0)">ابدأ الاختبار</button></div></div>', false);
+    }
+
+    /* flashcards */
+    if(w.cards && w.cards.length){
+      h += panel("ص","مصطلحات", ar(w.cards.length),'<div id="fcbox"></div>', false);
+    }
+
+    v.innerHTML = h;
+    if(w.cards && w.cards.length) card(0,false);
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  /* ── quiz engine ── */
+  function quiz(i, score, picked){
+    var q = ((C[ci].weeks[wi].quiz)||[])[i];
+    var total = C[ci].weeks[wi].quiz.length;
+    var box = document.getElementById("qzbox");
+    if(!box) return;
+
+    if(i >= total){
+      var pct = Math.round(score/total*100);
+      var msg = pct>=80 ? "ممتاز — المفاهيم دي مستقرة عندك."
+              : pct>=50 ? "كويس. راجع الأسئلة اللي غلطت فيها ورجع جرّب."
+              : "المادة محتاجة مراجعة قبل ما تكمّل. ارجع للمحاضرة وحاول تاني.";
+      box.innerHTML = '<div class="qz-done"><div class="qz-score">'+ar(score)+'</div>'+
+        '<div class="qz-of">من '+ar(total)+'</div><div class="qz-msg">'+msg+'</div>'+
+        '<button class="btn ghost" onclick="PORTAL.quiz(0,0)">حاول تاني</button></div>';
+      return;
+    }
+
+    var opts = (q.options||[]).map(function(o,k){
+      var cls = "opt";
+      if(picked != null){
+        if(k === q.answer) cls += " right";
+        else if(k === picked) cls += " wrong";
+      }
+      return '<button class="'+cls+'"'+(picked!=null?" disabled":"")+
+        ' onclick="PORTAL.quiz('+i+','+score+','+k+')">'+esc(o)+'</button>';
+    }).join("");
+
+    var tail = "";
+    if(picked != null){
+      var right = picked === q.answer;
+      tail = (q.why ? '<div class="qz-why"><b>'+(right?"صح. ":"الإجابة الصحيحة: ")+'</b>'+esc(q.why)+'</div>' : '')+
+        '<div class="qz-nav"><button class="btn" onclick="PORTAL.quiz('+(i+1)+','+(score+(right?1:0))+')">'+
+        (i+1>=total ? "شوف النتيجة" : "السؤال التالي")+'</button></div>';
+    }
+
+    box.innerHTML =
+      '<div class="qz-bar"><span class="qz-pos">'+ar(i+1)+' / '+ar(total)+'</span>'+
+      '<div class="qz-track"><div class="qz-fill" style="width:'+((i)/total*100)+'%"></div></div></div>'+
+      '<div class="qz-q">'+esc(q.q||"")+'</div>'+opts+tail;
+  }
+
+  /* ── flashcards ── */
+  function card(i, flipped){
+    var cards = C[ci].weeks[wi].cards || [];
+    var box = document.getElementById("fcbox");
+    if(!box || !cards.length) return;
+    var c0 = cards[i];
+    box.innerHTML =
+      '<div class="fc-stage"><div class="fc'+(flipped?" flip":"")+'" onclick="PORTAL.card('+i+','+(!flipped)+')">'+
+        '<div class="fc-in">'+
+          '<div class="fc-face fc-front"><div class="tx">'+esc(c0.front||"")+'</div>'+
+            '<div class="fc-hint">اضغط للإجابة</div></div>'+
+          '<div class="fc-face fc-back"><div class="tx">'+esc(c0.back||"")+'</div>'+
+            '<div class="fc-hint">اضغط للرجوع</div></div>'+
+        '</div></div>'+
+      '<div class="fc-nav">'+
+        '<button class="rnd" onclick="PORTAL.card('+(i-1)+',false)"'+(i<=0?" disabled":"")+'>السابق</button>'+
+        '<span class="pos">'+ar(i+1)+' من '+ar(cards.length)+'</span>'+
+        '<button class="rnd" onclick="PORTAL.card('+(i+1)+',false)"'+(i>=cards.length-1?" disabled":"")+'>التالي</button>'+
+      '</div></div>';
+  }
+
+  window.PORTAL = { quiz:quiz, card:card };
+
+  /* ── boot ── */
+  if(!C.length){
+    document.getElementById("view").innerHTML =
+      '<div class="empty"><div class="big">ملفات المقررات مش موجودة</div>'+
+      '<p>تأكد إن فولدر <code>data</code> فيه الأربع ملفات.</p></div>';
+  } else {
+    var lc = parseInt(load("course"),10);
+    if(!isNaN(lc) && C[lc]) ci = lc;
+    pickFirst();
+    render();
+  }
+})();
+</script>
+</body>
+</html>
