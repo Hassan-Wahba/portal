@@ -5,8 +5,7 @@ registerCourse(
   "title": "مبادئ المحاسبة المالية",
   "short": "مبادئ المحاسبة",
   "titleEn": "Principles of Financial Accounting",
-  "institution": "أكاديمية الشروق",
-  "term": "الفصل الدراسي الأول ٢٠٢٦/٢٠٢٧",
+  "term": "الفصل الدراسي الأول",
   "weeks": [
     {
       "n": 1,
@@ -14,13 +13,13 @@ registerCourse(
       "summary": "تأسيس الفكرة الأساسية: الأصول = الالتزامات + حقوق الملكية، وأثر كل عملية على طرفي المعادلة.",
       "lectures": [
         {
-          "title": "شرح الأسبوع الأول — المعادلة المحاسبية",
-          "url": "https://drive.google.com/",
+          "title": "شرح السكشن",
+          "url": "",
           "kind": "PDF"
         },
         {
-          "title": "ملخص المصطلحات (ورقة واحدة)",
-          "url": "https://drive.google.com/",
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
           "kind": "PDF"
         }
       ],
@@ -120,7 +119,8 @@ registerCourse(
           "front": "الدائنون — Accounts Payable",
           "back": "مبالغ مستحقة على المنشأة لموردين نتيجة شراء بالأجل. التزام متداول."
         }
-      ]
+      ],
+      "published": true
     },
     {
       "n": 2,
@@ -128,8 +128,13 @@ registerCourse(
       "summary": "الانتقال من أثر العملية على المعادلة إلى تسجيلها كقيد مدين ودائن في دفتر اليومية.",
       "lectures": [
         {
-          "title": "شرح الأسبوع الثاني — القيد المزدوج",
-          "url": "https://drive.google.com/",
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
           "kind": "PDF"
         }
       ],
@@ -195,116 +200,262 @@ registerCourse(
           "front": "ميزان المراجعة — Trial Balance",
           "back": "كشف بأرصدة الحسابات للتحقق من تساوي مجموع المدين مع مجموع الدائن."
         }
-      ]
+      ],
+      "published": true
     },
     {
       "n": 3,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 4,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 5,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 6,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 7,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 8,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 9,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 10,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 11,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 12,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 13,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     },
     {
       "n": 14,
       "title": "",
       "summary": "",
-      "lectures": [],
+      "lectures": [
+        {
+          "title": "شرح السكشن",
+          "url": "",
+          "kind": "PDF"
+        },
+        {
+          "title": "الملخص (ورقة واحدة)",
+          "url": "",
+          "kind": "PDF"
+        }
+      ],
       "problems": [],
       "quiz": [],
-      "cards": []
+      "cards": [],
+      "published": false
     }
-  ]
+  ],
+  "year": "2026/2027"
 }
 );
