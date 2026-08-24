@@ -213,6 +213,46 @@ main{padding:22px 0 60px}
 .rnd:hover:not(:disabled){background:var(--pine);color:#fff;border-color:var(--pine)}
 .rnd:disabled{opacity:.32;cursor:default}
 
+/* ── lock screen ── */
+#lock{
+  position:fixed;inset:0;z-index:200;
+  background:linear-gradient(135deg,var(--pine-deep),var(--pine) 55%,var(--pine-mid));
+  display:none;align-items:center;justify-content:center;padding:22px;
+}
+#lock.on{display:flex}
+.lockcard{
+  background:var(--card);border-radius:14px;padding:32px 28px;
+  width:100%;max-width:390px;text-align:center;
+  box-shadow:0 18px 50px rgba(0,0,0,.28);
+}
+.lockcard .mk{width:34px;height:3px;background:var(--gold);border-radius:2px;margin:0 auto 18px}
+.lockcard h2{font-size:1.2rem;color:var(--pine);font-weight:800;margin-bottom:6px}
+.lockcard p{font-size:.86rem;color:var(--muted);margin-bottom:20px;line-height:1.7}
+.lockcard input{
+  width:100%;font-family:inherit;font-size:1rem;text-align:center;
+  padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--paper);color:var(--ink);letter-spacing:1px;
+}
+.lockcard input:focus{outline:none;border-color:var(--pine);background:#fff}
+.lockcard .go{
+  width:100%;margin-top:11px;background:var(--pine);color:#fff;
+  font-family:'Tajawal',sans-serif;font-weight:700;font-size:.94rem;
+  padding:12px;border-radius:10px;transition:.16s;
+}
+.lockcard .go:hover{background:var(--pine-deep)}
+.lockcard .go:disabled{opacity:.6;cursor:default}
+.lockcard .err{
+  margin-top:12px;font-size:.85rem;color:var(--no);
+  background:#FBF0EF;border-radius:8px;padding:9px 12px;display:none;
+}
+.lockcard .err.on{display:block}
+.lockcard .fine{margin-top:16px;font-size:.74rem;color:#9EAAA7;line-height:1.7}
+footer .lockbtn{
+  margin-top:10px;font-family:'Tajawal',sans-serif;font-size:.74rem;
+  color:var(--muted);border:1px solid var(--line);padding:4px 13px;border-radius:14px;transition:.14s;
+}
+footer .lockbtn:hover{background:var(--paper);color:var(--pine)}
+
 /* ── empty / footer ── */
 .empty{
   text-align:center;padding:46px 22px;background:var(--card);
@@ -239,6 +279,18 @@ footer .rl{font-size:.79rem;color:var(--muted);margin-top:3px}
 </style>
 </head>
 <body>
+
+<div id="lock">
+  <div class="lockcard">
+    <div class="mk"></div>
+    <h2>المقررات الدراسية</h2>
+    <p>المحتوى محمي. اكتب كلمة الدخول الخاصة بالدفعة.</p>
+    <input id="pw" type="password" autocomplete="off" placeholder="كلمة الدخول" dir="ltr">
+    <button class="go" id="go">دخول</button>
+    <div class="err" id="err"></div>
+    <div class="fine">كلمة الدخول بتتحفظ على جهازك، فمش هتحتاج تكتبها كل مرة.</div>
+  </div>
+</div>
 
 <header>
   <div class="wrap">
@@ -267,7 +319,7 @@ footer .rl{font-size:.79rem;color:var(--muted);margin-top:3px}
 <footer><div class="wrap">
   <div class="rule"></div>
   <div class="nm" dir="ltr">Hassan Mohamed Hosny</div>
-  <div class="rl">معيد بأكاديمية الشروق</div>
+  <button class="lockbtn" id="lockbtn" style="display:none" onclick="PORTAL.lock()">قفل المحتوى</button>
 </div></footer>
 
 <script>
@@ -280,6 +332,37 @@ window.registerCourse = function(c){ window.COURSES.push(c); };
 <script src="data/course-2.js"></script>
 <script src="data/course-3.js"></script>
 <script src="data/course-4.js"></script>
+
+<script>
+/* ═══ AES-256-GCM, key derived from the passphrase via PBKDF2 ═══ */
+window.CRYPT = (function(){
+  function b64(u8){ var s=""; for(var i=0;i<u8.length;i++) s+=String.fromCharCode(u8[i]); return btoa(s); }
+  function ub64(str){ var b=atob(str), u=new Uint8Array(b.length);
+    for(var i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; }
+  async function key(pw, salt){
+    var km = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw),
+              "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey(
+      {name:"PBKDF2", salt:salt, iterations:150000, hash:"SHA-256"},
+      km, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+  }
+  return {
+    async seal(obj, pw){
+      var salt = crypto.getRandomValues(new Uint8Array(16));
+      var iv   = crypto.getRandomValues(new Uint8Array(12));
+      var k    = await key(pw, salt);
+      var ct   = await crypto.subtle.encrypt({name:"AES-GCM", iv:iv}, k,
+                   new TextEncoder().encode(JSON.stringify(obj)));
+      return { enc:true, salt:b64(salt), iv:b64(iv), ct:b64(new Uint8Array(ct)) };
+    },
+    async open(pack, pw){
+      var k  = await key(pw, ub64(pack.salt));
+      var pt = await crypto.subtle.decrypt({name:"AES-GCM", iv:ub64(pack.iv)}, k, ub64(pack.ct));
+      return JSON.parse(new TextDecoder().decode(pt));
+    }
+  };
+})();
+</script>
 
 <script>
 (function(){
@@ -488,16 +571,74 @@ window.registerCourse = function(c){ window.COURSES.push(c); };
   window.PORTAL = { quiz:quiz, card:card };
 
   /* ── boot ── */
-  if(!C.length){
-    document.getElementById("view").innerHTML =
-      '<div class="empty"><div class="big">ملفات المقررات مش موجودة</div>'+
-      '<p>تأكد إن فولدر <code>data</code> فيه الأربع ملفات.</p></div>';
-  } else {
+  function start(){
     var lc = parseInt(load("course"),10);
     if(!isNaN(lc) && C[lc]) ci = lc;
     pickFirst();
     render();
+    document.getElementById("lockbtn").style.display =
+      C.some(function(c){ return c.__wasEnc; }) ? "inline-block" : "none";
   }
+
+  async function unlock(pw){
+    var opened = [];
+    for(var i=0;i<C.length;i++){
+      if(!C[i].enc){ opened.push(C[i]); continue; }
+      try{
+        var o = await window.CRYPT.open(C[i], pw);
+        o.__wasEnc = true;
+        opened.push(o);
+      }catch(e){ return false; }
+    }
+    C = opened;
+    return true;
+  }
+
+  function showLock(msg){
+    var box = document.getElementById("lock");
+    box.classList.add("on");
+    var pw = document.getElementById("pw"),
+        go = document.getElementById("go"),
+        er = document.getElementById("err");
+    if(msg){ er.textContent = msg; er.classList.add("on"); }
+    setTimeout(function(){ pw.focus(); }, 120);
+
+    async function attempt(){
+      var v = pw.value.trim();
+      if(!v) return;
+      go.disabled = true; go.textContent = "جارٍ الفتح…"; er.classList.remove("on");
+      var ok = await unlock(v);
+      go.disabled = false; go.textContent = "دخول";
+      if(!ok){
+        er.textContent = "كلمة الدخول غير صحيحة."; er.classList.add("on");
+        pw.value = ""; pw.focus();
+        return;
+      }
+      save("key", v);
+      box.classList.remove("on");
+      start();
+    }
+    go.onclick = attempt;
+    pw.onkeydown = function(e){ if(e.key === "Enter") attempt(); };
+  }
+
+  window.PORTAL.lock = function(){
+    try{ localStorage.removeItem("portal:key"); }catch(e){ delete mem["key"]; }
+    location.reload();
+  };
+
+  (async function(){
+    if(!C.length){
+      document.getElementById("view").innerHTML =
+        '<div class="empty"><div class="big">ملفات المقررات مش موجودة</div>'+
+        '<p>تأكد إن فولدر <code>data</code> فيه الأربع ملفات.</p></div>';
+      return;
+    }
+    if(!C.some(function(c){ return c.enc; })){ start(); return; }
+    var saved = load("key");
+    if(saved && await unlock(saved)){ start(); return; }
+    showLock(saved ? "كلمة الدخول اتغيّرت. اكتب الجديدة." : "");
+  })();
 })();
 </script>
 </body>
